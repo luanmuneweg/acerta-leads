@@ -1,3 +1,4 @@
+import AppLayout from '@/components/layouts/AppLayout'
 import { QueryClient } from '@tanstack/react-query'
 import { createRootRouteWithContext, Outlet } from '@tanstack/react-router'
 import { Toaster } from 'sonner'
@@ -13,8 +14,10 @@ export const Route = createRootRouteWithContext<RouterContext>()({
 function Root() {
     return (
         <>
-            <Outlet />
-            <Toaster richColors />
+            <AppLayout>
+                <Outlet />
+            </AppLayout>
+            <Toaster position="top-right" />
         </>
     )
 }
