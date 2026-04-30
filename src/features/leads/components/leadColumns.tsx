@@ -1,8 +1,7 @@
 import { Button } from '@/components/ui/button'
 import type { LeadResponseDto } from '@/features/leads/types/dtos/lead-response.dto'
 import type { ColumnDef } from '@tanstack/react-table'
-import EditIcon from '@/components/icons/EditIcon'
-import TrashIcon from '@/components/icons/TrashIcon'
+import Icon from '@/components/icons/Icon'
 import { cpfMask } from '@/lib/masks/cpf.mask'
 import { phoneMask } from '@/lib/masks/phone.mask'
 
@@ -40,13 +39,13 @@ export function buildLeadColumns({ onEdit, onDeleteRequest }: LeadColumnsActions
                         onClick={() => onEdit(row.original)}
                         className="text-grey-base hover:bg-primary-base/10 hover:text-primary-base size-8 rounded border-0 bg-transparent p-0 shadow-none"
                     >
-                        <EditIcon />
+                        <Icon name="edit" className="size-6" />
                     </Button>
                     <Button
                         onClick={() => onDeleteRequest(row.original)}
                         className="text-grey-base size-8 rounded border-0 bg-transparent p-0 shadow-none hover:bg-red-50 hover:text-red-500"
                     >
-                        <TrashIcon />
+                        <Icon name="trash" className="size-5" />
                     </Button>
                 </div>
             ),
