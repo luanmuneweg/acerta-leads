@@ -5,9 +5,7 @@ import { toast as sonner } from 'sonner'
 type ToastType = 'success' | 'error'
 
 function showToast(type: ToastType, message: string) {
-    sonner.custom(() => <ToastContent type={type} message={message} duration={config.toastDuration} />, {
-        duration: config.toastDuration,
-    })
+    sonner.custom(() => <ToastContent type={type} message={message} duration={config.toastDuration} />)
 }
 
 export const toast = {
