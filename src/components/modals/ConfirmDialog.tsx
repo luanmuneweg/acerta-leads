@@ -8,6 +8,7 @@ type ConfirmDialogProps = {
     isLoading?: boolean
     confirmLabel?: string
     cancelLabel?: string
+    confirmVariant?: 'destructive' | 'contained' | 'primary-outlined'
     onConfirm: () => void
     onCancel: () => void
 }
@@ -19,6 +20,7 @@ export default function ConfirmDialog({
     isLoading = false,
     confirmLabel = 'Confirmar',
     cancelLabel = 'Cancelar',
+    confirmVariant,
     onConfirm,
     onCancel,
 }: ConfirmDialogProps) {
@@ -33,7 +35,7 @@ export default function ConfirmDialog({
                     <ButtonDefault variant="cancel-outlined" onClick={onCancel} disabled={isLoading}>
                         {cancelLabel}
                     </ButtonDefault>
-                    <ButtonDefault variant="destructive" isLoading={isLoading} onClick={onConfirm}>
+                    <ButtonDefault variant={confirmVariant} isLoading={isLoading} disabled={isLoading} onClick={onConfirm}>
                         {confirmLabel}
                     </ButtonDefault>
                 </DialogFooter>

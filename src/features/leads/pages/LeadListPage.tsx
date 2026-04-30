@@ -123,6 +123,7 @@ export default function LeadListPage() {
                 title="Excluir lead"
                 description="Tem certeza que deseja excluir este lead? Essa ação não pode ser desfeita."
                 isLoading={isDeleting}
+                confirmVariant="destructive"
                 onConfirm={onDeleteConfirm}
                 onCancel={onDeleteCancel}
             />
