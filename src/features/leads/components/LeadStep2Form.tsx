@@ -17,9 +17,14 @@ type LeadStep2FormProps = {
 }
 
 export default function LeadStep2Form({ defaultValues, isEdit, isSaving, onSubmit, onBack }: LeadStep2FormProps) {
-    const { control, handleSubmit, reset } = useForm<LeadStep2Values>({
+    const {
+        control,
+        handleSubmit,
+        reset,
+        formState: { isValid },
+    } = useForm<LeadStep2Values>({
         resolver: zodResolver(leadStep2Schema),
-        mode: 'onTouched',
+        mode: 'onChange',
         defaultValues,
     })
 
@@ -41,7 +46,7 @@ export default function LeadStep2Form({ defaultValues, isEdit, isSaving, onSubmi
                 <ButtonDefault type="button" variant="cancel-outlined" className="w-full sm:w-30" onClick={onBack}>
                     Voltar
                 </ButtonDefault>
-                <ButtonDefault type="submit" variant="contained" className="w-full sm:w-30" isLoading={isSaving}>
+                <ButtonDefault type="submit" variant="contained" className="w-full sm:w-30" isLoading={isSaving} disabled={!isValid || isSaving}>
                     {isEdit ? 'Salvar' : 'Cadastrar'}
                 </ButtonDefault>
             </div>

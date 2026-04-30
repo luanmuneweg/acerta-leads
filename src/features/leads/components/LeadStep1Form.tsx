@@ -19,9 +19,16 @@ type LeadStep1FormProps = {
 }
 
 export default function LeadStep1Form({ defaultValues, maritalStatusOptions, onAdvance, onCancel }: LeadStep1FormProps) {
-    const { control, handleSubmit, setValue, reset, clearErrors } = useForm<LeadStep1Values>({
+    const {
+        control,
+        handleSubmit,
+        setValue,
+        reset,
+        clearErrors,
+        formState: { isValid },
+    } = useForm<LeadStep1Values>({
         resolver: zodResolver(leadStep1Schema),
-        mode: 'onTouched',
+        mode: 'onChange',
         defaultValues,
     })
 
@@ -73,7 +80,7 @@ export default function LeadStep1Form({ defaultValues, maritalStatusOptions, onA
                 <ButtonDefault type="button" variant="cancel-outlined" className="w-full sm:w-30" onClick={onCancel}>
                     Cancelar
                 </ButtonDefault>
-                <ButtonDefault type="submit" variant="contained" className="w-full sm:w-30">
+                <ButtonDefault type="submit" variant="contained" className="w-full sm:w-30" disabled={!isValid}>
                     Avançar
                 </ButtonDefault>
             </div>
