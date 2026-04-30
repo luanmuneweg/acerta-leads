@@ -8,9 +8,14 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
+import { createFileRoute } from '@tanstack/react-router'
+
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as LeadsIndexRouteImport } from './routes/leads/index'
+
+const LeadsNewIndexLazyRouteImport = createFileRoute('/leads/new/')()
+const LeadsIdEditIndexLazyRouteImport = createFileRoute('/leads/$id/edit/')()
 
 const IndexRoute = IndexRouteImport.update({
     id: '/',
@@ -22,31 +27,49 @@ const LeadsIndexRoute = LeadsIndexRouteImport.update({
     path: '/leads/',
     getParentRoute: () => rootRouteImport,
 } as any).lazy(() => import('./routes/leads/index.lazy').then((d) => d.Route))
+const LeadsNewIndexLazyRoute = LeadsNewIndexLazyRouteImport.update({
+    id: '/leads/new/',
+    path: '/leads/new/',
+    getParentRoute: () => rootRouteImport,
+} as any).lazy(() => import('./routes/leads/new/index.lazy').then((d) => d.Route))
+const LeadsIdEditIndexLazyRoute = LeadsIdEditIndexLazyRouteImport.update({
+    id: '/leads/$id/edit/',
+    path: '/leads/$id/edit/',
+    getParentRoute: () => rootRouteImport,
+} as any).lazy(() => import('./routes/leads/$id/edit/index.lazy').then((d) => d.Route))
 
 export interface FileRoutesByFullPath {
     '/': typeof IndexRoute
     '/leads/': typeof LeadsIndexRoute
+    '/leads/new/': typeof LeadsNewIndexLazyRoute
+    '/leads/$id/edit/': typeof LeadsIdEditIndexLazyRoute
 }
 export interface FileRoutesByTo {
     '/': typeof IndexRoute
     '/leads': typeof LeadsIndexRoute
+    '/leads/new': typeof LeadsNewIndexLazyRoute
+    '/leads/$id/edit': typeof LeadsIdEditIndexLazyRoute
 }
 export interface FileRoutesById {
     __root__: typeof rootRouteImport
     '/': typeof IndexRoute
     '/leads/': typeof LeadsIndexRoute
+    '/leads/new/': typeof LeadsNewIndexLazyRoute
+    '/leads/$id/edit/': typeof LeadsIdEditIndexLazyRoute
 }
 export interface FileRouteTypes {
     fileRoutesByFullPath: FileRoutesByFullPath
-    fullPaths: '/' | '/leads/'
+    fullPaths: '/' | '/leads/' | '/leads/new/' | '/leads/$id/edit/'
     fileRoutesByTo: FileRoutesByTo
-    to: '/' | '/leads'
-    id: '__root__' | '/' | '/leads/'
+    to: '/' | '/leads' | '/leads/new' | '/leads/$id/edit'
+    id: '__root__' | '/' | '/leads/' | '/leads/new/' | '/leads/$id/edit/'
     fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
     IndexRoute: typeof IndexRoute
     LeadsIndexRoute: typeof LeadsIndexRoute
+    LeadsNewIndexLazyRoute: typeof LeadsNewIndexLazyRoute
+    LeadsIdEditIndexLazyRoute: typeof LeadsIdEditIndexLazyRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -65,11 +88,27 @@ declare module '@tanstack/react-router' {
             preLoaderRoute: typeof LeadsIndexRouteImport
             parentRoute: typeof rootRouteImport
         }
+        '/leads/new/': {
+            id: '/leads/new/'
+            path: '/leads/new'
+            fullPath: '/leads/new/'
+            preLoaderRoute: typeof LeadsNewIndexLazyRouteImport
+            parentRoute: typeof rootRouteImport
+        }
+        '/leads/$id/edit/': {
+            id: '/leads/$id/edit/'
+            path: '/leads/$id/edit'
+            fullPath: '/leads/$id/edit/'
+            preLoaderRoute: typeof LeadsIdEditIndexLazyRouteImport
+            parentRoute: typeof rootRouteImport
+        }
     }
 }
 
 const rootRouteChildren: RootRouteChildren = {
     IndexRoute: IndexRoute,
     LeadsIndexRoute: LeadsIndexRoute,
+    LeadsNewIndexLazyRoute: LeadsNewIndexLazyRoute,
+    LeadsIdEditIndexLazyRoute: LeadsIdEditIndexLazyRoute,
 }
 export const routeTree = rootRouteImport._addFileChildren(rootRouteChildren)._addFileTypes<FileRouteTypes>()

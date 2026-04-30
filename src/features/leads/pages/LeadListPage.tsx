@@ -8,9 +8,10 @@ import { useDeleteLead } from '@/features/leads/hooks/use-delete-lead.hook'
 import { useListLeads } from '@/features/leads/hooks/use-list-leads.hook'
 import type { LeadResponseDto } from '@/features/leads/types/dtos/lead-response.dto'
 import type { LeadListFilter } from '@/features/leads/types/lead-list-filter.type'
+import { handleError } from '@/lib/handle-error'
 import { useNavigate, useSearch } from '@tanstack/react-router'
 import { cpfMask } from '@/lib/masks/cpf.mask'
-import PlusIcon from '@/components/icons/PlusIcon'
+import Icon from '@/components/icons/Icon'
 import { useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from '@/lib/toast'
@@ -18,10 +19,10 @@ import { toast } from '@/lib/toast'
 export default function LeadListPage() {
     const navigate = useNavigate()
     const search = useSearch({ from: '/leads/' })
-    const { data: leads = [], isFetching } = useListLeads(LeadAdapter.toQuery(search))
-    const { mutateAsync: deleteLead } = useDeleteLead()
+    const { data: leads = [], isFetching, isError, error } = useListLeads(LeadAdapter.toFilterQuery(search))
+    const { mutateAsync: deleteLead, isPending: isDeleting } = useDeleteLead()
     const { control, handleSubmit, reset } = useForm<LeadListFilter>({
-        defaultValues: LeadAdapter.defaultValues(search),
+        defaultValues: LeadAdapter.defaultFilterValues(search),
     })
 
     const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false)
@@ -31,11 +32,15 @@ export default function LeadListPage() {
     const columns = useMemo(() => buildLeadColumns({ onEdit, onDeleteRequest }), [])
 
     useEffect(() => {
-        reset(LeadAdapter.defaultValues(search))
+        reset(LeadAdapter.defaultFilterValues(search))
     }, [search.nome, search.cpf])
 
+    useEffect(() => {
+        if (isError) handleError(error)
+    }, [isError])
+
     function onFilter(data: LeadListFilter) {
-        navigate({ to: '/leads', search: LeadAdapter.toQuery(data) })
+        navigate({ to: '/leads', search: LeadAdapter.toFilterQuery(data) })
     }
 
     function onClear() {
@@ -43,8 +48,7 @@ export default function LeadListPage() {
     }
 
     function onEdit(lead: LeadResponseDto) {
-        // @ts-expect-error TODO: route not yet created
-        navigate({ to: '/leads/$id/edit', params: { id: lead.id } })
+        navigate({ to: '/leads/$id/edit', params: { id: String(lead.id) } })
     }
 
     function onDeleteRequest(lead: LeadResponseDto) {
@@ -59,12 +63,13 @@ export default function LeadListPage() {
             toast.success('Lead excluído com sucesso!')
             setDeleteModalIsOpen(false)
             setLeadToDelete(null)
-        } catch {
-            toast.error('Erro ao excluir lead. Tente novamente.')
+        } catch (error) {
+            handleError(error)
         }
     }
 
     function onDeleteCancel() {
+        if (isDeleting) return
         setDeleteModalIsOpen(false)
         setLeadToDelete(null)
     }
@@ -75,9 +80,9 @@ export default function LeadListPage() {
                 <div className="flex items-center justify-between gap-4">
                     <h1 className="title-base">Consulta de Leads</h1>
                     <ButtonDefault
-                        variant="primary-outlined" // @ts-expect-error TODO: route not yet created
+                        variant="primary-outlined"
                         onClick={() => navigate({ to: '/leads/new' })}
-                        icon={<PlusIcon />}
+                        icon={<Icon name="add" className="size-6" />}
                         iconPlacement="right"
                         className="w-auto"
                     >
@@ -117,6 +122,7 @@ export default function LeadListPage() {
                 open={deleteModalIsOpen}
                 title="Excluir lead"
                 description="Tem certeza que deseja excluir este lead? Essa ação não pode ser desfeita."
+                isLoading={isDeleting}
                 onConfirm={onDeleteConfirm}
                 onCancel={onDeleteCancel}
             />

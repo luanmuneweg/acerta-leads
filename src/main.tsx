@@ -15,6 +15,7 @@ const queryClient = new QueryClient({
     defaultOptions: {
         queries: {
             refetchOnWindowFocus: false,
+            retry: 1,
         },
     },
 })
@@ -22,6 +23,7 @@ const queryClient = new QueryClient({
 const router = createRouter({
     routeTree,
     context: { queryClient },
+    defaultPreload: 'intent',
 })
 
 function App() {

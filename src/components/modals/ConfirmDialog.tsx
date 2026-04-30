@@ -1,14 +1,14 @@
 import ButtonDefault from '@/components/buttons/ButtonDefault'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { useState } from 'react'
 
 type ConfirmDialogProps = {
     open: boolean
     title: string
     description: string
+    isLoading?: boolean
     confirmLabel?: string
     cancelLabel?: string
-    onConfirm: () => Promise<void>
+    onConfirm: () => void
     onCancel: () => void
 }
 
@@ -16,22 +16,12 @@ export default function ConfirmDialog({
     open,
     title,
     description,
+    isLoading = false,
     confirmLabel = 'Confirmar',
     cancelLabel = 'Cancelar',
     onConfirm,
     onCancel,
 }: ConfirmDialogProps) {
-    const [isLoading, setIsLoading] = useState(false)
-
-    async function handleConfirm() {
-        setIsLoading(true)
-        try {
-            await onConfirm()
-        } finally {
-            setIsLoading(false)
-        }
-    }
-
     return (
         <Dialog open={open} onOpenChange={(o) => !o && onCancel()}>
             <DialogContent showCloseButton={false}>
@@ -43,7 +33,7 @@ export default function ConfirmDialog({
                     <ButtonDefault variant="cancel-outlined" onClick={onCancel} disabled={isLoading}>
                         {cancelLabel}
                     </ButtonDefault>
-                    <ButtonDefault variant="destructive" isLoading={isLoading} onClick={handleConfirm}>
+                    <ButtonDefault variant="destructive" isLoading={isLoading} onClick={onConfirm}>
                         {confirmLabel}
                     </ButtonDefault>
                 </DialogFooter>

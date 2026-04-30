@@ -1,4 +1,5 @@
 export enum QueryKey {
     LIST_LEADS = 'LIST_LEADS',
     GET_LEAD = 'GET_LEAD',
+    LIST_MARITAL_STATUSES = 'LIST_MARITAL_STATUSES',
 }

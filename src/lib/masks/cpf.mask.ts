@@ -1,4 +1,4 @@
-import type { IMask } from '@/types/utils/mask.type'
+import type { IMask } from '@/types/utils/mask.interface'
 
 class CpfMask implements IMask {
     mask(value: string): string {

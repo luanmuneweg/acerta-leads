@@ -1,4 +1,4 @@
-import type { IMask } from '@/types/utils/mask.type'
+import type { IMask } from '@/types/utils/mask.interface'
 
 class PhoneMask implements IMask {
     mask(value: string): string {
