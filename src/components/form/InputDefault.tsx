@@ -2,7 +2,7 @@ import { cn } from '@/lib/utils'
 import { Field, FieldDescription, FieldError, FieldLabel } from '@/components/ui/field'
 import { InputGroup, InputGroupInput } from '@/components/ui/input-group'
 import { Controller, type Control, type FieldValues, type Path } from 'react-hook-form'
-import type { IMask } from '@/types/utils/mask.type'
+import type { IMask } from '@/types/utils/mask.interface'
 
 type InputDefaultProps<T extends FieldValues> = React.ComponentProps<'input'> & {
     control: Control<T>
